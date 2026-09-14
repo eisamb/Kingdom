@@ -1,0 +1,28 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+
+      - name: Unzip game project
+        run: unzip -o KingdomClash.zip -d .
+
+      - name: Export Android APK
+        uses: dulvui/godot-android-export@v4.0.0
+        with:
+          working-directory: KingdomClash
+          godot-version: 4.3
+
+      - name: Upload APK as downloadable artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: KingdomClash-apk
+          path: KingdomClash/build/android/*.apk
